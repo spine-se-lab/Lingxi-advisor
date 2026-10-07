@@ -1,0 +1,16 @@
+{
+  "name": "codehelix-lingxi-advisor",
+  "version": "0.3.13",
+  "private": true,
+  "description": "Lingxi Advisor local installer",
+  "bin": {
+    "codehelix-lingxi-advisor": "bin/codehelix-plugin.js"
+  },
+  "files": [
+    "bin",
+    "delivery"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

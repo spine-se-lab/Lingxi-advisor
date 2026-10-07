@@ -1,0 +1,8 @@
+{
+  "id": "lingxi-advisor",
+  "runtime_wheels": [
+    "runtime/lingxi_advisor-0.8.6-py3-none-any.whl"
+  ],
+  "schema_version": 1,
+  "version": "0.8.6"
+}

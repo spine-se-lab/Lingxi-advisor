@@ -1,0 +1,8 @@
+[build-system]
+requires = []
+build-backend = "native_build_backend"
+backend-path = ["."]
+
+# The Codex native adapter accepts a Python source package. This in-tree backend
+# derives its wheel from the locked Lingxi Advisor release and adds only the
+# host entry point. It never maintains a second copy of the business source.

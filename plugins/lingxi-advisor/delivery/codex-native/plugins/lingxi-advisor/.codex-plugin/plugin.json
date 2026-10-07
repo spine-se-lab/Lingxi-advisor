@@ -1,0 +1,22 @@
+{
+  "name": "lingxi-advisor",
+  "version": "0.3.13",
+  "description": "Deliver the full Lingxi Advisor runtime and Knowledge Preparation/Codify capabilities.",
+  "skills": "./skills/",
+  "author": {
+    "name": "CodeHelix"
+  },
+  "interface": {
+    "displayName": "Lingxi Advisor",
+    "shortDescription": "Deliver the full Lingxi Advisor runtime and Knowledge Preparation/Codify capabilities.",
+    "longDescription": "Deliver the full Lingxi Advisor runtime and Knowledge Preparation/Codify capabilities.",
+    "developerName": "CodeHelix",
+    "category": "Productivity",
+    "capabilities": [
+      "skills",
+      "mcp"
+    ],
+    "defaultPrompt": "Use Lingxi Advisor when its Skills match the current task."
+  },
+  "mcpServers": "./.mcp.json"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "codehelix-lingxi-advisor",
+  "interface": {
+    "displayName": "CodeHelix"
+  },
+  "plugins": [
+    {
+      "name": "lingxi-advisor",
+      "source": {
+        "source": "local",
+        "path": "./plugins/lingxi-advisor"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

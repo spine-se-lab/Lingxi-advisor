@@ -1,0 +1,22 @@
+{
+  "schema": "codehelix.lingxi_advisor_import_lock/v1",
+  "source_repository": "https://github.com/yiikou/Lingxi-TaskPatternGuidance.git",
+  "source_revision": "21d9b7f279b80616e21c780ce6a26a2cd8f1db9e",
+  "source_overlay": "patches/lingxi-advisor-0.8.6-bounded-retrieval.patch",
+  "source_overlay_sha256": "157e0ed0d24164053e802a07c2a15e3f82bb149da21a24a3de224469b48703fd",
+  "integrated_hardening": "0.7 atomic writer and process-tree overlay integrated into the source revision",
+  "core_distribution": "lingxi-advisor",
+  "core_version": "0.8.6",
+  "archive": "lingxi-advisor-extension-0.8.6.zip",
+  "archive_sha256": "f2ea26a15de0621816ac9c51361eddaa62fe20b4cc3bee52a141999396876fbf",
+  "upstream_archive": "taskpattern-extension-0.8.6.zip",
+  "upstream_archive_sha256": "c73331d4b6010e918e677fc3552cd7db994d71e24bd4504603baa53c5c83f04b",
+  "transformation": "scripts/rebrand-release.py",
+  "reproducible_builds": 2,
+  "source_worktree_policy": "clean committed source plus the locked reviewable overlay",
+  "release_readiness": {
+    "upstream_full_tests": "268 passed; 3 opt-in/POSIX-only skipped on Windows",
+    "atomic_writer_concurrency": "passed",
+    "posix_process_tree": "passed"
+  }
+}

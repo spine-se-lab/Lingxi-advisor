@@ -1,0 +1,469 @@
+{
+  "schema": "codehelix.plugin_target/v1",
+  "profile": "claude-code-2.1.285",
+  "capabilities": {
+    "mining": false,
+    "application": true
+  },
+  "compatibility": {
+    "agent_system": "claude-code",
+    "harness": "claude-code",
+    "gate": "version",
+    "target_version": "2.1.285",
+    "required_paths": []
+  },
+  "requires": {
+    "harness_features": [
+      "skill",
+      "mcp_stdio"
+    ],
+    "runtimes": [
+      "python>=3.11",
+      "uv",
+      "node>=22",
+      "claude-code==2.1.285"
+    ],
+    "credentials": [
+      {
+        "provider": "GitHub",
+        "label": "GitHub Token",
+        "env": "GITHUB_TOKEN",
+        "required": true,
+        "repeatable": true,
+        "max_entries": 16,
+        "prompt_before_configuration": true
+      },
+      {
+        "provider": "LingxiAdvisor custom model",
+        "label": "独立模型 API Key（必填：该宿主不支持 MCP sampling，Runtime 与 Operator 都使用独立模型）",
+        "env": "LINGXI_ADVISOR_MODEL_API_KEY",
+        "required": false,
+        "prompt": true
+      }
+    ],
+    "environment": [
+      "PYTHON",
+      "GITHUB_TOKEN_1",
+      "GITHUB_TOKEN_2",
+      "GITHUB_TOKEN_3",
+      "GITHUB_TOKEN_4",
+      "GITHUB_TOKEN_5",
+      "GITHUB_TOKEN_6",
+      "GITHUB_TOKEN_7",
+      "GITHUB_TOKEN_8",
+      "GITHUB_TOKEN_9",
+      "GITHUB_TOKEN_10",
+      "GITHUB_TOKEN_11",
+      "GITHUB_TOKEN_12",
+      "GITHUB_TOKEN_13",
+      "GITHUB_TOKEN_14",
+      "GITHUB_TOKEN_15",
+      "LINGXI_ADVISOR_JUDGE_API_KEY",
+      "LINGXI_ADVISOR_GENERATOR_API_KEY"
+    ]
+  },
+  "dependencies": [],
+  "capability_exports": [
+    {
+      "id": "lingxi.advisor.runtime",
+      "contract": "lingxi.advisor.runtime/v1",
+      "schema": "contracts/lingxi-advisor-runtime-v1.schema.json"
+    }
+  ],
+  "components": [
+    {
+      "kind": "skill",
+      "name": "lingxi-advisor"
+    },
+    {
+      "kind": "mcp_server",
+      "name": "lingxi-advisor-runtime",
+      "transport": "stdio",
+      "tools": [
+        {
+          "name": "lingxi.advisor.search",
+          "read_only": false
+        },
+        {
+          "name": "lingxi.advisor.apply",
+          "read_only": true
+        }
+      ]
+    }
+  ],
+  "surfaces": {
+    "skill": {
+      "required": true,
+      "targets": {
+        "claude-code": "native"
+      }
+    },
+    "mcp_server": {
+      "required": true,
+      "targets": {
+        "claude-code": "native"
+      }
+    }
+  },
+  "data_pointers": [
+    {
+      "id": "lingxi-advisor_knowledge",
+      "schema": "lingxi.advisor.knowledge_artifact/v1",
+      "mode": "read_write",
+      "root": "target_config",
+      "path": "lingxi/advisor/data/knowl_cache",
+      "include": [
+        "**/*.xml",
+        "**/*.manifest.json",
+        "manifest.jsonl"
+      ],
+      "display_name": {
+        "zh-CN": "ä»»åŠ¡æ¨¡å¼çŸ¥è¯†åº“",
+        "en": "Lingxi Advisor Knowledge"
+      },
+      "description": {
+        "zh-CN": "å·²ç”Ÿæˆä¸”é€šè¿‡æ ¡éªŒçš„å¯å¤ç”¨ä»»åŠ¡æ¨¡å¼çŸ¥è¯†ï¼›å‡çº§å’Œå¸è½½æ—¶ä¿ç•™ã€‚",
+        "en": "Validated reusable lingxi-advisor knowledge, preserved across upgrades and removal."
+      },
+      "binding": {
+        "configuration": "data_root",
+        "path": "knowl_cache"
+      }
+    },
+    {
+      "id": "lingxi-advisor_batches",
+      "schema": "lingxi.advisor.local_data/v1",
+      "mode": "read_write",
+      "root": "target_config",
+      "path": "lingxi/advisor/data/outputs/knowledge_preparation_batches",
+      "binding": {
+        "configuration": "data_root",
+        "path": "outputs/knowledge_preparation_batches"
+      },
+      "display_name": {
+        "zh-CN": "çŸ¥è¯†å‡†å¤‡æ‰¹ä»»åŠ¡",
+        "en": "Knowledge Preparation Batches"
+      },
+      "description": {
+        "zh-CN": "çŸ¥è¯†å‡†å¤‡æ‰¹ä»»åŠ¡ï¼Œç‹¬ç«‹äºŽå®‰è£…åˆ¶å“ç®¡ç†ï¼Œå¸è½½ä¿ç•™ã€‚",
+        "en": "Knowledge Preparation Batches, stored independently from installed code and preserved on removal."
+      },
+      "include": [
+        "**/*"
+      ]
+    },
+    {
+      "id": "lingxi-advisor_outputs",
+      "schema": "lingxi.advisor.local_data/v1",
+      "mode": "read_write",
+      "root": "target_config",
+      "path": "lingxi/advisor/data/outputs",
+      "binding": {
+        "configuration": "data_root",
+        "path": "outputs"
+      },
+      "display_name": {
+        "zh-CN": "çŸ¥è¯†å‡†å¤‡è¾“å‡ºä¸Žè¿è¡Œè®°å½•",
+        "en": "Knowledge Preparation Outputs"
+      },
+      "description": {
+        "zh-CN": "çŸ¥è¯†å‡†å¤‡è¾“å‡ºä¸Žè¿è¡Œè®°å½•ï¼Œç‹¬ç«‹äºŽå®‰è£…åˆ¶å“ç®¡ç†ï¼Œå¸è½½ä¿ç•™ã€‚",
+        "en": "Knowledge Preparation Outputs, stored independently from installed code and preserved on removal."
+      },
+      "include": [
+        "**/*"
+      ]
+    },
+    {
+      "id": "lingxi-advisor_cache",
+      "schema": "lingxi.advisor.local_data/v1",
+      "mode": "read_write",
+      "root": "target_config",
+      "path": "lingxi/advisor/data/cache",
+      "binding": {
+        "configuration": "data_root",
+        "path": "cache"
+      },
+      "display_name": {
+        "zh-CN": "æ£€ç´¢ä¸Žä»“åº“ç¼“å­˜",
+        "en": "Retrieval and Repository Cache"
+      },
+      "description": {
+        "zh-CN": "æ£€ç´¢ä¸Žä»“åº“ç¼“å­˜ï¼Œç‹¬ç«‹äºŽå®‰è£…åˆ¶å“ç®¡ç†ï¼Œå¸è½½ä¿ç•™ã€‚",
+        "en": "Retrieval and Repository Cache, stored independently from installed code and preserved on removal."
+      },
+      "include": [
+        "**/*"
+      ]
+    },
+    {
+      "id": "lingxi-advisor_preretrieved",
+      "schema": "lingxi.advisor.preretrieved/v1",
+      "mode": "read_write",
+      "root": "target_config",
+      "path": "lingxi/advisor/data/preretrieved_issues",
+      "binding": {
+        "configuration": "data_root",
+        "path": "preretrieved_issues"
+      },
+      "display_name": {
+        "zh-CN": "é¢„æ£€ç´¢å€™é€‰çŸ¥è¯†",
+        "en": "Pre-retrieved Candidates"
+      },
+      "description": {
+        "zh-CN": "æŒ‰éƒ¨ç½²æƒé™ä¿å­˜çš„åŽ†å²å€™é€‰ï¼Œä¾›åŽç»­ä»»åŠ¡å¤ç”¨ï¼›å¸è½½ä¿ç•™ã€‚",
+        "en": "Historical candidates persisted when permitted for later reuse; preserved on removal."
+      },
+      "include": [
+        "**/*"
+      ]
+    }
+  ],
+  "harness_bindings": [
+    {
+      "harness": "claude-code",
+      "adapter": "installer/adapters/claude_code.py"
+    }
+  ],
+  "configuration": {
+    "inputs": [
+      {
+        "id": "issue_tracking_provider",
+        "type": "choice",
+        "required": true,
+        "default": "github",
+        "choices": [
+          "github"
+        ],
+        "prompt": false
+      },
+      {
+        "id": "gate_model_name",
+        "type": "string",
+        "required": false,
+        "prompt": true,
+        "note": "Required for this host (no MCP sampling): model id served by gate_model_base_url, e.g. deepseek/deepseek-v4.1-flash",
+        "label": "LLM Gate 模型（必填：该宿主不支持 MCP sampling）"
+      },
+      {
+        "id": "gate_model_base_url",
+        "type": "string",
+        "required": false,
+        "prompt": true,
+        "note": "Required for this host (no MCP sampling): OpenAI-compatible endpoint, e.g. https://openrouter.ai/api/v1; key comes from LINGXI_ADVISOR_MODEL_API_KEY",
+        "label": "LLM Gate API URL（必填：OpenAI 兼容端点）"
+      },
+      {
+        "id": "judge_max_output_tokens",
+        "type": "string",
+        "required": false,
+        "default": "32768",
+        "prompt": false,
+        "note": "Judge output budget, including reasoning tokens where charged by the provider; integer 1024â€“131072."
+      },
+      {
+        "id": "generator_max_output_tokens",
+        "type": "string",
+        "required": false,
+        "default": "26000",
+        "prompt": false,
+        "note": "Generator output budget; integer 1024-131072."
+      },
+      {
+        "id": "generator_timeout_seconds",
+        "type": "string",
+        "required": false,
+        "default": "300",
+        "prompt": false,
+        "note": "Generator request timeout in seconds; integer 30-1800."
+      },
+      {
+        "id": "allow_preretrieved_updates",
+        "type": "choice",
+        "required": false,
+        "default": "true",
+        "choices": [
+          "true",
+          "false"
+        ],
+        "prompt": false,
+        "note": "Persistent pre-retrieved updates are enabled by default"
+      },
+      {
+        "id": "data_root",
+        "type": "path",
+        "required": false,
+        "prompt": false,
+        "note": "Persistent LingxiAdvisor data directory; default: target config/lingxi/advisor/data. Preserved on removal."
+      },
+      {
+        "id": "batch_input_path",
+        "type": "path",
+        "required": false,
+        "prompt": false,
+        "note": "Server-owned public task JSONL input for Operator batches."
+      },
+      {
+        "id": "allow_live_search",
+        "type": "choice",
+        "required": false,
+        "prompt": false,
+        "default": "true",
+        "choices": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "id": "allow_refresh",
+        "type": "choice",
+        "required": false,
+        "prompt": false,
+        "default": "false",
+        "choices": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "id": "allow_clone",
+        "type": "choice",
+        "required": false,
+        "prompt": false,
+        "default": "false",
+        "choices": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "id": "allow_fetch",
+        "type": "choice",
+        "required": false,
+        "prompt": false,
+        "default": "false",
+        "choices": [
+          "true",
+          "false"
+        ]
+      }
+    ]
+  },
+  "extensions": {},
+  "installer": {
+    "protocol": "codehelix.plugin_installer/v1",
+    "command": [
+      "npx",
+      "--package",
+      ".",
+      "codehelix-lingxi-advisor",
+      "protocol"
+    ],
+    "operations": [
+      "check",
+      "plan",
+      "install",
+      "verify"
+    ],
+    "timeout_seconds": {
+      "check": 60,
+      "plan": 60,
+      "install": 1200,
+      "verify": 600
+    },
+    "entrypoint": "installer/installer.py"
+  },
+  "installation": {
+    "target_inputs": [
+      "root",
+      "config_root",
+      "executable"
+    ],
+    "payload": [
+      {
+        "source": "runtime",
+        "target": "managed PackageStore and Python Runtime"
+      },
+      {
+        "source": "assets/skills/lingxi-advisor",
+        "target": "CLAUDE_CONFIG_DIR/skills/lingxi-advisor"
+      },
+      {
+        "source": "launcher.py",
+        "target": "managed PackageStore launcher"
+      }
+    ],
+    "patches": [],
+    "registrations": [
+      {
+        "kind": "skill",
+        "name": "lingxi-advisor",
+        "owner": "package"
+      },
+      {
+        "kind": "mcp_server",
+        "name": "lingxi-advisor",
+        "path": ".mcp.json",
+        "owner": "package"
+      },
+      {
+        "kind": "capability_export",
+        "name": "lingxi.advisor.runtime/v1",
+        "owner": "package"
+      }
+    ]
+  },
+  "verification": {
+    "level": "real",
+    "date": "2026-09-30",
+    "versions": [
+      "2.1.285"
+    ],
+    "evidence": "docs/host-support-0.3.6.md"
+  },
+  "integrity": null,
+  "managed_install": {
+    "schema": "codehelix.managed_install/v1",
+    "runtimes": [
+      {
+        "id": "lingxi-advisor",
+        "kind": "python",
+        "python": "3.12",
+        "source": "runtime/lingxi-advisor-extension-0.8.6/runtime/lingxi_advisor-0.8.6-py3-none-any.whl",
+        "command": "lingxi-advisor-mcp",
+        "requirements": "runtime-requirements.lock"
+      }
+    ],
+    "skills": [
+      {
+        "id": "lingxi-advisor",
+        "source": "assets/skills/lingxi-advisor",
+        "destination": "skills/lingxi-advisor"
+      }
+    ],
+    "target_paths": [
+      {
+        "root": "config",
+        "path": "lingxi/advisor/exports/lingxi.advisor.runtime-v1.json",
+        "kind": "capability_export"
+      },
+      {
+        "root": "target",
+        "path": ".mcp.json",
+        "kind": "native_plugin",
+        "json_paths": [
+          [
+            "mcpServers",
+            "lingxi-advisor"
+          ]
+        ]
+      }
+    ],
+    "legacy_ownership": {
+      "path": "lingxi/advisor/runtime/codehelix-install.json",
+      "files_key": "managed_files",
+      "on_remove": "deactivate"
+    },
+    "verify_on_inspect": true
+  }
+}

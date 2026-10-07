@@ -1,0 +1,9 @@
+{
+  "name": "lingxi-advisor",
+  "version": "0.3.13",
+  "description": "Search and apply safe same-repository LingxiAdvisor knowledge.",
+  "author": {
+    "name": "CodeHelix"
+  },
+  "skills": "./assets/skills"
+}

@@ -1,0 +1,7 @@
+{
+  "args": ["--profile", "runtime", "--transport", "stdio"],
+  "command": "lingxi-advisor-mcp",
+  "profile": "runtime",
+  "schema_version": 1,
+  "tools": ["lingxi.advisor.search", "lingxi.advisor.apply"]
+}

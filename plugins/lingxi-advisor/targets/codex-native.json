@@ -1,0 +1,67 @@
+{
+  "schema": "codehelix.native_target/v1",
+  "profile": "codex-native",
+  "execution": {
+    "mode": "native",
+    "adapter": "codex/native-plugins",
+    "tool_timeout_sec": 1000
+  },
+  "compatibility": {
+    "agent_system": "codex",
+    "harness": "codex",
+    "target_version": ">=0.136.0 <0.137.0",
+    "required_paths": []
+  },
+  "required_capabilities": [
+    "skills",
+    "mcp"
+  ],
+  "optional_capabilities": [],
+  "requires": {
+    "harness_features": [
+      "skill",
+      "mcp_stdio"
+    ],
+    "runtimes": [
+      "python>=3.11",
+      "uv",
+      "node+npx"
+    ],
+    "credentials": [
+      {
+        "provider": "GitHub",
+        "label": "GitHub Token",
+        "env": "GITHUB_TOKEN",
+        "required": true
+      }
+    ],
+    "environment": [
+      "GITHUB_TOKEN_1",
+      "GITHUB_TOKEN_2",
+      "GITHUB_TOKEN_3",
+      "GITHUB_TOKEN_4",
+      "GITHUB_TOKEN_5",
+      "GITHUB_TOKEN_6",
+      "GITHUB_TOKEN_7",
+      "GITHUB_TOKEN_8",
+      "GITHUB_TOKEN_9",
+      "GITHUB_TOKEN_10",
+      "GITHUB_TOKEN_11",
+      "GITHUB_TOKEN_12",
+      "GITHUB_TOKEN_13",
+      "GITHUB_TOKEN_14",
+      "GITHUB_TOKEN_15",
+      "LINGXI_ADVISOR_JUDGE_BASE_URL",
+      "LINGXI_ADVISOR_JUDGE_API_KEY",
+      "LINGXI_ADVISOR_JUDGE_MODEL",
+      "LINGXI_ADVISOR_GENERATOR_BASE_URL",
+      "LINGXI_ADVISOR_GENERATOR_API_KEY",
+      "LINGXI_ADVISOR_GENERATOR_MODEL"
+    ]
+  },
+  "verification": {
+    "level": "fixture",
+    "date": "2026-09-30",
+    "evidence": "source/tests/test_pi_codex_targets.py"
+  }
+}

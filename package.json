@@ -1,0 +1,28 @@
+{
+  "name": "lingxi-advisor",
+  "version": "0.3.13",
+  "description": "Procedural-knowledge guidance for coding agents",
+  "license": "MIT",
+  "bin": {
+    "lingxi-advisor": "bin/lingxi-advisor.js"
+  },
+  "files": [
+    "bin",
+    "plugin-kit",
+    "plugins/lingxi-advisor",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@clack/prompts": "1.0.0",
+    "jsonc-parser": "3.3.1"
+  },
+  "scripts": {
+    "build": "node bin/lingxi-advisor.js build",
+    "validate": "node bin/lingxi-advisor.js validate",
+    "test": "python -m pytest -q plugins/lingxi-advisor/source/tests"
+  }
+}

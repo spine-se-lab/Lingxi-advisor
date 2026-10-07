@@ -1,0 +1,168 @@
+#!/usr/bin/env python3
+"""Build self-contained managed Lingxi Advisor deliveries."""
+from __future__ import annotations
+
+import json
+import shutil
+import sys
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parent
+KIT = ROOT.parents[1] / "plugin-kit"
+SOURCE = ROOT / "source"
+sys.path.insert(0, str(KIT / "build"))
+sys.path.insert(0, str(SOURCE))
+
+from delivery_build import copytree, digest_tree, write_declared_manifest, write_locks  # noqa: E402
+from installer.release import (  # noqa: E402
+    extract_release_zip,
+    sha256,
+    validate_release_directory,
+)
+
+
+PROTOCOL_SHIM = SOURCE / "bin" / "codehelix-lingxi-advisor.js"
+ARCHIVE = SOURCE / "upstream" / "lingxi-advisor-extension-0.8.6.zip"
+IMPORT_LOCK = SOURCE / "upstream" / "import-lock.json"
+PROFILES = (
+    "icode-chrys-0.28",
+    "opencode-1.x",
+    "pi-0.85.1",
+    "claude-code-2.1.285",
+    "deepseek-harness-0.2.0-rc.2",
+)
+LINGXI_ADVISOR_ONLY = {"claude-code-2.1.285", "deepseek-harness-0.2.0-rc.2"}
+
+
+def _normalize_vendored_text() -> None:
+    """Match Git's LF checkout before copying and hashing imported npm files."""
+    for path in (SOURCE / "vendor" / "npm").rglob("*"):
+        if not path.is_file():
+            continue
+        content = path.read_bytes()
+        if b"\0" in content:
+            continue
+        try:
+            content.decode("utf-8")
+        except UnicodeDecodeError:
+            continue
+        normalized = content.replace(b"\r\n", b"\n")
+        if normalized != content:
+            path.write_bytes(normalized)
+
+
+def _stabilize_delivery_lock(destination: Path) -> None:
+    """Keep generated lock ordering independent of host path semantics."""
+    lock_path = destination / "delivery-lock.json"
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    files = lock.get("files", {})
+    lock["files"] = {name: files[name] for name in sorted(files)}
+    lock_path.write_bytes(
+        (json.dumps(lock, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+    )
+
+
+def _normalize_release_text(root: Path) -> None:
+    """Make release payload bytes stable across Git checkout platforms."""
+    checksum = root / "CHECKSUMS.sha256"
+    files = sorted((item for item in root.rglob("*") if item.is_file()), key=lambda item: item.relative_to(root).as_posix())
+    for path in files:
+        if path == checksum or path.suffix == ".whl":
+            continue
+        content = path.read_bytes()
+        normalized = content.replace(b"\r\n", b"\n")
+        if normalized != content:
+            path.write_bytes(normalized)
+    entries = [
+        f"{sha256(path)}  {path.relative_to(root).as_posix()}"
+        for path in files
+        if path != checksum
+    ]
+    checksum.write_bytes(("\n".join(entries) + "\n").encode("utf-8"))
+
+
+def _build(profile: str) -> None:
+    destination = ROOT / "delivery" / profile
+    if destination.exists():
+        shutil.rmtree(destination)
+    destination.mkdir(parents=True)
+    (destination / "bin").mkdir()
+    shutil.copy2(PROTOCOL_SHIM, destination / "bin" / "codehelix-lingxi-advisor.js")
+    copytree(SOURCE / "installer", destination / "installer")
+    copytree(SOURCE / "config_ui", destination / "config_ui")
+    shutil.copy2(SOURCE / "launcher.py", destination / "launcher.py")
+    if profile.startswith("pi-"):
+        copytree(SOURCE / "pi", destination / "pi")
+    if profile.startswith("claude-code-"):
+        copytree(
+            SOURCE / "claude-plugin" / ".claude-plugin",
+            destination / ".claude-plugin",
+        )
+    # Copy the shared implementation, not a plugin-specific second lifecycle.
+    copytree(KIT, destination / "kit" / "plugin-kit", ignores=("__pycache__", "*.pyc", ".DS_Store", ".pytest_cache"))
+    # Local-directory npx links the entry point without making its cached
+    # dependencies resolvable from worker files under the real source path.
+    # Ship the locked Kit dependencies as payload (including their licenses).
+    copytree(SOURCE / "vendor" / "npm", destination / "kit" / "node_modules")
+    copytree(ROOT / "contracts", destination / "contracts")
+    shutil.copy2(SOURCE / "package.json", destination / "package.json")
+    shutil.copy2(SOURCE / "package-lock.json", destination / "package-lock.json")
+    shutil.copy2(SOURCE / "upstream" / "requirements.lock", destination / "runtime-requirements.lock")
+    runtime = destination / "runtime" / "lingxi-advisor-extension-0.8.6"
+    extract_release_zip(ARCHIVE, runtime)
+    # Repository inference is a standalone compatibility-layer capability, so
+    # keep the locked core archive byte-identical and overlay only its public
+    # skill documentation in generated deliveries.
+    shutil.copytree(
+        SOURCE / "assets" / "skills" / "lingxi-advisor",
+        runtime / "skills" / "lingxi-advisor",
+        dirs_exist_ok=True,
+    )
+    _normalize_release_text(runtime)
+    info = validate_release_directory(runtime)
+    skill_names = (
+        ("lingxi-advisor",)
+        if profile in LINGXI_ADVISOR_ONLY
+        else ("lingxi-advisor", "knowledge-preparation-operator")
+    )
+    for name in skill_names:
+        skill = destination / "assets" / "skills" / name
+        skill.parent.mkdir(parents=True, exist_ok=True)
+        copytree(runtime / "skills" / name, skill)
+        supplement = SOURCE / "skill-guidance" / f"{name}.md"
+        skill_file = skill / "SKILL.md"
+        skill_file.write_bytes(skill_file.read_bytes().rstrip() + b"\n\n" + supplement.read_bytes())
+    write_declared_manifest(ROOT, f"targets/{profile}.json", destination)
+    imported = json.loads(IMPORT_LOCK.read_text(encoding="utf-8"))
+    if imported.get("archive_sha256") != sha256(ARCHIVE):
+        raise RuntimeError("Lingxi Advisor import lock does not match the committed archive")
+    write_locks(destination, {
+        "schema": "codehelix.source_lock/v1",
+        "target": profile,
+        "source_tree_sha256": digest_tree(SOURCE),
+        "installer_kit_sha256": digest_tree(KIT, excludes=("__pycache__", "*.pyc", ".DS_Store", ".pytest_cache")),
+        "sources": [{
+            "repo": imported["source_repository"],
+            "commit": imported["source_revision"],
+            "role": "Lingxi Advisor 0.8.6 release bundle",
+            "archive_sha256": imported["archive_sha256"],
+        }],
+        "core_version": info.version,
+        "release_tree_sha256": info.digest,
+        "excluded": ["Harbor", "SWE-bench Pro runner", "Lingxi Profiles"],
+    })
+    _stabilize_delivery_lock(destination)
+    (destination / "bin" / "codehelix-lingxi-advisor.js").chmod(0o755)
+
+
+def main() -> None:
+    if not ARCHIVE.is_file() or not IMPORT_LOCK.is_file():
+        raise RuntimeError("Run scripts/import-lingxi-advisor-release.py before build-delivery")
+    _normalize_vendored_text()
+    for profile in PROFILES:
+        _build(profile)
+
+
+if __name__ == "__main__":
+    main()

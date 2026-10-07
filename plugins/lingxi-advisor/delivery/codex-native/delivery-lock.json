@@ -1,0 +1,18 @@
+{
+  "schema": "codehelix.delivery_lock/v1",
+  "files": {
+    ".agents/plugins/marketplace.json": "e3160289f7bd2e82508c0921c0e18306f6fbc365974d6b37db75928a911b8a79",
+    "codehelix-plugin.json": "180ed4385ced9383ec7bc7b659515793cf1f4b16642c3bd540d452be92baac9c",
+    "plugins/lingxi-advisor/.codex-plugin/plugin.json": "f3b6983c63c3314b513f88c9c9adb96bd5235f7b4fa59d02d568429b20c92686",
+    "plugins/lingxi-advisor/.mcp.json": "e7d98f7a16da726b61a84f79f537054f7b04a86f843e5dcafd77110ce38554e0",
+    "plugins/lingxi-advisor/runtime/environment.cjs": "d287af67bef3a81838340f5578d19ee6af29a3ae8491eecd78a903fa761e86be",
+    "plugins/lingxi-advisor/runtime/launch.cjs": "57299285792712b0e47ff79cc7e6e44ec203fda7aa4dcc53a66bdff0030912a3",
+    "plugins/lingxi-advisor/runtime/lingxi-advisor/lingxi_advisor_codehelix_host-0.8.6-py3-none-any.whl": "399dd2d2f059d8f4bcb24d753b7fd505b5604f2b1d2a8c8619450a8988a3704d",
+    "plugins/lingxi-advisor/runtime/lingxi-advisor/requirements.lock": "b2b6b4817651fe70609eb391d08f12c3a920afa04f141d09f72d2998b71b5eee",
+    "plugins/lingxi-advisor/runtime/servers.json": "99bdaecfed8b313a6ba4e6a21f58a7209425ef1d758948df1ac6c140d389fd55",
+    "plugins/lingxi-advisor/skills/lingxi-advisor/SKILL.md": "e0bae49ebb79e32a1a319aa0ab7881bc53163018bf2d7234d798ef98e76d049a",
+    "plugins/lingxi-advisor/skills/lingxi-advisor/agents/openai.yaml": "d6ea1ba777ad06dcb90b3efce13b1648b29fa820f6f668ee76ff7b92071dec04",
+    "plugins/lingxi-advisor/skills/lingxi-advisor/references/mcp-tools.md": "540eea6b1ca7e0c4accd9a603c49357a26b30a002a99764b332c02acd5d4f970",
+    "source-lock.json": "4d087d814c126038ebf731c1a863f4d72f594effd5fb99bee61706d88ef313e7"
+  }
+}

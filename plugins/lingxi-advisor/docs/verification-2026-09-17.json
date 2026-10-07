@@ -1,0 +1,135 @@
+{
+  "schema": "lingxi.advisor.acceptance_evidence/v1",
+  "date": "2026-09-17",
+  "plugin_version": "0.3.0",
+  "core_version": "0.8.0",
+  "core_revision": "9f14a269f87927861f537bd8f4290325cdf9a57c",
+  "archive_sha256": "693af067eae4050756438b9a2d36f0b32b783cb7dbf61bec6991c7c452dedf86",
+  "implementation_commits": [
+    "2958725",
+    "1d847bf"
+  ],
+  "model": {
+    "profile": "Chrys deepseek-v4-flash",
+    "id": "deepseek/deepseek-v4-flash-0731",
+    "endpoint": "https://openrouter.ai/api/v1"
+  },
+  "tests": {
+    "core": {
+      "passed": 223,
+      "skipped_live_github": 2
+    },
+    "plugin": {
+      "passed": 47
+    },
+    "kit": {
+      "passed": 166
+    },
+    "lingxi-advisor_contracts_and_locks": {
+      "passed": 17
+    },
+    "latest_real_hosts": {
+      "passed": 4,
+      "chrys": "0.20.1",
+      "opencode": "1.18.25"
+    },
+    "clean_checkout_rebuild": {
+      "byte_identical_files": 288
+    }
+  },
+  "public_task": {
+    "repo": "psf/requests",
+    "issue_number": 5714,
+    "base_commit": "c2b307dbefe21177af03f9feb37181a89a799fcc",
+    "safe_historical_candidates": 44,
+    "selected_historical_issue": 1228
+  },
+  "modes": {
+    "light": {
+      "original_generation": {
+        "status": "completed",
+        "generated_count": 1,
+        "failed_count": 0,
+        "cache_hit_count": 0
+      },
+      "sha256": "6cf63a12df06e5f2fcb309ae1ea9d90a85781f8d9baff330e97170898962a10c",
+      "latest_installed_full_flow": "completed",
+      "runtime_cache_hits": 1,
+      "prepare_status": "completed",
+      "batch_statuses": [
+        "running",
+        "completed"
+      ],
+      "batch_status": "completed",
+      "read": {
+        "artifact_name": "psf__requests__issue_1228.xml",
+        "chars": 31745
+      },
+      "generation_core_revision": "d7c9d69671f9b65dafd3426432192642c67ecd2f"
+    },
+    "grounded_analysis": {
+      "original_generation": {
+        "status": "completed",
+        "generated_count": 1,
+        "failed_count": 0,
+        "cache_hit_count": 0
+      },
+      "sha256": "af67199015a984720925d300e801894932f3717d429e4fabcbb19fe68ed060a6",
+      "latest_installed_full_flow": "completed",
+      "runtime_cache_hits": 1,
+      "prepare_status": "completed",
+      "batch_statuses": [
+        "running",
+        "completed"
+      ],
+      "batch_status": "completed",
+      "read": {
+        "artifact_name": "psf__requests__issue_1228.xml",
+        "chars": 35946
+      },
+      "generation_core_revision": "d7c9d69671f9b65dafd3426432192642c67ecd2f"
+    }
+  },
+  "product_removal": {
+    "status": "removed",
+    "source_missing": true,
+    "preserved_files": 706,
+    "knowledge_xml_count": 6,
+    "both_mcp_fields_removed": true,
+    "skills_removed": true,
+    "receipt_id": "2ff74ba9b7fe44bf9fc02c44f3f5e2c1"
+  },
+  "product_data_refs": [
+    {
+      "id": "lingxi-advisor_knowledge",
+      "resolution": "bound",
+      "readable_files": 5
+    },
+    {
+      "id": "lingxi-advisor_batches",
+      "resolution": "bound",
+      "readable_files": 12
+    },
+    {
+      "id": "lingxi-advisor_outputs",
+      "resolution": "bound",
+      "readable_files": 125
+    },
+    {
+      "id": "lingxi-advisor_cache",
+      "resolution": "bound",
+      "readable_files": 564
+    },
+    {
+      "id": "lingxi-advisor_preretrieved",
+      "resolution": "bound",
+      "readable_files": 3
+    }
+  ],
+  "observed_limitations": [
+    "Cold public Light search exhausted the 900-second total request budget; persisted-candidate retry completed.",
+    "Product UI removal confirmation could not be driven by the browser tool; actual Product backend removal passed.",
+    "No native Windows run; MCP sampling fixture acceptance is not a full Chrys conversation.",
+    "Unrelated swe-pro-kit-with-lingxi-advisor baseline Delivery drift remains."
+  ]
+}

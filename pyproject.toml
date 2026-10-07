@@ -1,0 +1,12 @@
+[project]
+name = "lingxi-advisor-development"
+version = "0.3.12"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+
+[dependency-groups]
+dev = ["pytest>=8.0", "pyyaml>=6.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["plugins/lingxi-advisor/source/tests"]

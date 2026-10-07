@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codehelix.dev/contracts/lingxi-advisor-usage-event-v1.schema.json",
+  "title": "Lingxi Advisor usage event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "run_id", "session_id", "tool_call_id", "tool_name"],
+  "properties": {
+    "schema": {"const": "lingxi.advisor.usage_event/v1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "tool_call_id": {"type": "string", "minLength": 1},
+    "tool_name": {"enum": ["lingxi.advisor.search", "lingxi.advisor.apply"]},
+    "artifact_ref": {"type": "string"},
+    "cache_hit_count": {"type": "integer", "minimum": 0},
+    "generated_count": {"type": "integer", "minimum": 0},
+    "apply_status": {"type": "string"}
+  }
+}

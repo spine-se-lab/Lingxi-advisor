@@ -1,0 +1,4 @@
+# Source and Delivery locks hash exact bytes; checkout must preserve LF on Windows too.
+* text=auto eol=lf
+*.whl -text
+*.zip -text

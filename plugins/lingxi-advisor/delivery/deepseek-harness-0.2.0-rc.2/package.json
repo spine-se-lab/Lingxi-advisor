@@ -1,0 +1,20 @@
+{
+  "name": "codehelix-lingxi-advisor",
+  "version": "0.3.13",
+  "private": true,
+  "bin": {
+    "codehelix-lingxi-advisor": "bin/codehelix-lingxi-advisor.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@clack/prompts": "1.0.0",
+    "jsonc-parser": "3.3.1"
+  },
+  "overrides": {
+    "picocolors": "1.1.1",
+    "sisteransi": "1.0.5",
+    "@clack/core": "1.0.0"
+  }
+}

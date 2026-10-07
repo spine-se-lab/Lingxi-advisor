@@ -1,0 +1,67 @@
+[
+  {
+    "name": "lingxi-advisor",
+    "runtime": {
+      "kind": "python",
+      "source": "source/upstream",
+      "command": "lingxi-advisor-codehelix-runtime",
+      "python": "3.12"
+    },
+    "workspace_env": "LINGXI_ADVISOR_DATA_ROOT",
+    "env_vars": [
+      "GITHUB_TOKEN",
+      "GITHUB_TOKEN_1",
+      "GITHUB_TOKEN_2",
+      "GITHUB_TOKEN_3",
+      "GITHUB_TOKEN_4",
+      "GITHUB_TOKEN_5",
+      "GITHUB_TOKEN_6",
+      "GITHUB_TOKEN_7",
+      "GITHUB_TOKEN_8",
+      "GITHUB_TOKEN_9",
+      "GITHUB_TOKEN_10",
+      "GITHUB_TOKEN_11",
+      "GITHUB_TOKEN_12",
+      "GITHUB_TOKEN_13",
+      "GITHUB_TOKEN_14",
+      "GITHUB_TOKEN_15",
+      "LINGXI_ADVISOR_JUDGE_BASE_URL",
+      "LINGXI_ADVISOR_JUDGE_API_KEY",
+      "LINGXI_ADVISOR_JUDGE_MODEL",
+      "LINGXI_ADVISOR_GENERATOR_BASE_URL",
+      "LINGXI_ADVISOR_GENERATOR_API_KEY",
+      "LINGXI_ADVISOR_GENERATOR_MODEL"
+    ],
+    "transport": "stdio",
+    "description": {
+      "en": "Search and apply safe same-repository Lingxi Advisor knowledge.",
+      "zh-CN": "检索并应用同仓库的安全 Lingxi Advisor 知识。"
+    },
+    "tools": [
+      {
+        "name": "lingxi.advisor.search",
+        "read_only": false
+      },
+      {
+        "name": "lingxi.advisor.apply",
+        "read_only": true
+      }
+    ],
+    "data_access": [
+      {
+        "mode": "read_write",
+        "root": "target_config",
+        "path": "lingxi/advisor/data",
+        "binding": {
+          "configuration": "workbench_workspace",
+          "path": "."
+        },
+        "description": {
+          "en": "Lingxi Advisor knowledge, retrieval cache, and generated output data.",
+          "zh-CN": "Lingxi Advisor 知识、检索缓存与生成输出数据。"
+        }
+      }
+    ],
+    "wheel": "lingxi_advisor_codehelix_host-0.8.6-py3-none-any.whl"
+  }
+]

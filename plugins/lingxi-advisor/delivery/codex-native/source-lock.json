@@ -1,0 +1,8 @@
+{
+  "schema": "codehelix.source_lock/v1",
+  "source_tree_sha256": "9e89363481ede91e0517bf82d1b35a67a8bfd96ab7ef477f0ec79fb1fb813893",
+  "adapter": "codex/native-plugins",
+  "adapter_tree_sha256": "5ad967d3fa9708ed3e525eb5bdb082dc767159cac8dc3fef5e19164a037daaee",
+  "builder_tree_sha256": "cc4d396bab39adfc9b87a5a583168a84a9ba6984e56e2ac80d8fd36f7d9d3f83",
+  "kit_tree_sha256": "fbfc5e431ae8960d8500001576cee847c2d1c6bdcd6bf9875cf8fd46071cf52f"
+}

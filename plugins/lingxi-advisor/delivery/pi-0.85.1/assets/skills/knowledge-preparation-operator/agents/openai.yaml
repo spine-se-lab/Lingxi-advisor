@@ -1,0 +1,12 @@
+interface:
+  display_name: 'Knowledge Preparation Operator'
+  short_description: 'Run Codify preparation operations'
+  default_prompt: 'Use $knowledge-preparation-operator to run historical knowledge preparation.'
+dependencies:
+  tools:
+    - type: 'mcp'
+      value: 'lingxi_advisor-operator'
+      description: 'Runs the LingxiAdvisor Operator profile.'
+policy:
+  allow_implicit_invocation: true
+  products: ['chatgpt', 'codex', 'api', 'atlas']

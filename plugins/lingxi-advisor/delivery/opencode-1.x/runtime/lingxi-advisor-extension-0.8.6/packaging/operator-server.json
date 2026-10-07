@@ -1,0 +1,14 @@
+{
+  "args": ["--profile", "operator", "--transport", "stdio"],
+  "command": "lingxi-advisor-mcp",
+  "profile": "operator",
+  "schema_version": 1,
+  "tools": [
+    "lingxi.advisor.knowledge_preparation_capabilities",
+    "lingxi.advisor.prepare_historical_knowledge",
+    "lingxi.advisor.start_preparation_batch",
+    "lingxi.advisor.get_preparation_batch",
+    "lingxi.advisor.get_preparation_result",
+    "lingxi.advisor.read_prepared_knowledge"
+  ]
+}

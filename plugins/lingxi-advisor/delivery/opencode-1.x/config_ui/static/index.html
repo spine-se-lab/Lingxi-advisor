@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LingxiAdvisor configuration</title>
+  <style>
+    :root { color-scheme: light; --ink:#17211f; --muted:#60706c; --line:#d8e2df; --paper:#fff; --wash:#f3f7f5; --accent:#176b5b; --danger:#a02d2d; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:linear-gradient(135deg,#edf5f1,#f7f3ea); color:var(--ink); font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    main { width:min(920px,calc(100% - 32px)); margin:32px auto 64px; }
+    header,.panel { background:rgba(255,255,255,.96); border:1px solid var(--line); border-radius:16px; box-shadow:0 12px 30px rgba(30,55,48,.08); }
+    header { padding:26px 28px; }
+    h1 { margin:0 0 6px; font-size:28px; letter-spacing:-.02em; }
+    h2 { margin:0 0 16px; font-size:18px; }
+    p { margin:5px 0; }
+    .subtle,.help,.meta { color:var(--muted); }
+    .meta { display:flex; flex-wrap:wrap; gap:8px 18px; margin-top:15px; font-size:13px; }
+    .panel { margin-top:18px; padding:24px 28px; }
+    .status { border-left:4px solid var(--accent); padding:10px 13px; background:var(--wash); border-radius:6px; }
+    .status.error { border-color:var(--danger); color:var(--danger); }
+    fieldset { margin:22px 0 0; padding:0; border:0; }
+    legend { width:100%; padding:0 0 8px; border-bottom:1px solid var(--line); font-weight:700; }
+    .field { display:grid; grid-template-columns:minmax(180px,1fr) minmax(260px,1.4fr); gap:8px 22px; padding:17px 0; border-bottom:1px solid #edf1ef; }
+    label { font-weight:650; }
+    input,select { width:100%; padding:10px 11px; border:1px solid #aebdb8; border-radius:7px; background:#fff; color:var(--ink); font:inherit; }
+    input:focus,select:focus { outline:3px solid rgba(23,107,91,.18); border-color:var(--accent); }
+    input[readonly],select:disabled { background:#eef2f0; color:#52615d; }
+    .help { font-size:13px; margin-top:5px; }
+    .badge { display:inline-block; margin-left:6px; padding:2px 7px; border-radius:999px; background:#e7eeeb; color:#50605b; font-size:11px; font-weight:600; vertical-align:1px; }
+    .error-text { color:var(--danger); min-height:1.2em; font-size:13px; margin-top:4px; }
+    .credentials { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px; }
+    .credential { padding:13px; border:1px solid var(--line); border-radius:9px; }
+    .present { color:var(--accent); font-weight:700; }
+    .missing { color:var(--danger); font-weight:700; }
+    button { border:0; border-radius:8px; padding:11px 18px; background:var(--accent); color:#fff; font:600 15px inherit; cursor:pointer; }
+    button:disabled { opacity:.55; cursor:wait; }
+    .actions { display:flex; align-items:center; gap:14px; margin-top:22px; }
+    code { overflow-wrap:anywhere; }
+    @media (max-width:680px) { .field { grid-template-columns:1fr; } header,.panel { padding:20px; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>LingxiAdvisor configuration</h1>
+    <p class="subtle">Edit the managed runtime settings declared by the installed Delivery.</p>
+    <div class="meta" id="meta"><span>Loading installed deployment…</span></div>
+  </header>
+  <section class="panel">
+    <div class="status" id="status" role="status">Loading configuration…</div>
+    <form id="configuration" hidden>
+      <div id="fields"></div>
+      <div class="actions"><button id="save" type="submit">Save configuration</button><span class="subtle">Restart or reload the host runtime after saving.</span></div>
+    </form>
+  </section>
+  <section class="panel" id="credential-panel" hidden>
+    <h2>Startup credentials</h2>
+    <p class="subtle">Status only. Values stay in the host process environment and are never sent to this page or saved in configuration.</p>
+    <div class="credentials" id="credentials"></div>
+  </section>
+</main>
+<script>
+  const state = { revision: null, fields: [] };
+  const form = document.querySelector('#configuration');
+  const fieldsRoot = document.querySelector('#fields');
+  const status = document.querySelector('#status');
+  const text = value => String(value ?? '');
+
+  function showStatus(message, error=false) {
+    status.textContent = message;
+    status.classList.toggle('error', error);
+  }
+
+  function render(data) {
+    state.revision = data.revision;
+    state.fields = data.fields;
+    const meta = document.querySelector('#meta'); meta.replaceChildren();
+    [
+      `Plugin ${text(data.plugin.version)} · Core ${text(data.plugin.core_version)}`,
+      `${text(data.deployment.agent_system || 'unknown host')} · ${text(data.deployment.profile || 'Delivery profile unavailable')} · ${text(data.deployment.target_version || 'version not declared')}`,
+      `Deployment ${text(data.deployment.id)}`,
+      `Binding ${text(data.deployment.binding_path)}`
+    ].forEach(value => { const item=document.createElement('span'); item.textContent=value; meta.append(item); });
+    const groups = new Map();
+    data.fields.forEach(field => {
+      if (!groups.has(field.group)) groups.set(field.group, []);
+      groups.get(field.group).push(field);
+    });
+    fieldsRoot.replaceChildren();
+    for (const [group, items] of groups) {
+      const set = document.createElement('fieldset');
+      const legend = document.createElement('legend'); legend.textContent = group; set.append(legend);
+      items.forEach(field => {
+        const row = document.createElement('div'); row.className = 'field';
+        const heading = document.createElement('div');
+        const label = document.createElement('label'); label.htmlFor = `field-${field.id}`; label.textContent = field.label;
+        const badge = document.createElement('span'); badge.className = 'badge'; badge.textContent = field.read_only ? 'installation only' : 'runtime'; label.append(badge); heading.append(label);
+        const control = document.createElement('div');
+        let input;
+        if (field.choices.length) {
+          input = document.createElement('select');
+          field.choices.forEach(choice => { const option=document.createElement('option'); option.value=choice; option.textContent=choice; input.append(option); });
+          input.value = String(field.value);
+        } else {
+          input = document.createElement('input'); input.type = field.type === 'path' ? 'text' : 'text'; input.value = text(field.value);
+        }
+        input.id = `field-${field.id}`; input.name = field.id; input.dataset.editable = String(!field.read_only);
+        if (field.read_only) { input.readOnly = true; if (input.tagName === 'SELECT') input.disabled = true; }
+        if (field.required) input.required = true;
+        control.append(input);
+        if (field.description) { const help=document.createElement('div'); help.className='help'; help.textContent=field.description; control.append(help); }
+        const error=document.createElement('div'); error.className='error-text'; error.dataset.for=field.id; control.append(error);
+        row.append(heading,control); set.append(row);
+      });
+      fieldsRoot.append(set);
+    }
+    const credentials = document.querySelector('#credentials'); credentials.replaceChildren();
+    data.credentials.forEach(item => {
+      const card=document.createElement('div'); card.className='credential';
+      const name=document.createElement('div'); name.textContent=`${item.provider} — ${item.env}`;
+      const value=document.createElement('div'); value.className=item.present?'present':'missing'; value.textContent=item.present?'Present in server environment':(item.required?'Missing from server environment':'Not set (optional)');
+      card.append(name,value); credentials.append(card);
+    });
+    document.querySelector('#credential-panel').hidden = !data.credentials.length;
+    form.hidden = false;
+    showStatus(
+      data.validation.valid
+        ? `Configuration is valid. Runtime readiness: ${text(data.readiness.message)}. Sampling: ${text(data.readiness.sampling)}.`
+        : data.validation.message,
+      !data.validation.valid || data.readiness.ready === false
+    );
+  }
+
+  async function load() {
+    try { const response=await fetch('/api/config',{cache:'no-store'}); const data=await response.json(); if(!response.ok) throw new Error(data.error); render(data); }
+    catch(error) { showStatus(error.message || 'Could not load configuration.',true); }
+  }
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault(); document.querySelectorAll('.error-text').forEach(item => item.textContent='');
+    const values={}; state.fields.filter(field => !field.read_only).forEach(field => {
+      const value=document.querySelector(`#field-${field.id}`).value;
+      if (value !== text(field.value)) values[field.id]=value;
+    });
+    const button=document.querySelector('#save'); button.disabled=true; showStatus('Validating and saving…');
+    try {
+      const response=await fetch('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({values,revision:state.revision})});
+      const data=await response.json();
+      if(!response.ok) { Object.entries(data.fields||{}).forEach(([name,message]) => { const node=document.querySelector(`.error-text[data-for="${name}"]`); if(node) node.textContent=message; }); throw new Error(data.error); }
+      render(data);
+    } catch(error) { showStatus(error.message || 'Could not save configuration.',true); }
+    finally { button.disabled=false; }
+  });
+  load();
+</script>
+</body>
+</html>

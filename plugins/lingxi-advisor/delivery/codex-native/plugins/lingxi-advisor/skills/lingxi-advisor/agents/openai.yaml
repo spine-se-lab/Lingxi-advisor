@@ -1,0 +1,11 @@
+interface:
+  display_name: "LingxiAdvisor Runtime"
+  short_description: "Search and apply scoped historical knowledge"
+  default_prompt: "Use $lingxi-advisor to search and apply relevant historical knowledge when this repair task has a concrete uncertainty."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "lingxi-advisor"
+      description: "Searches approved historical knowledge and assembles a target-scoped result."
+policy:
+  allow_implicit_invocation: true

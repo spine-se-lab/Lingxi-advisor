@@ -1,0 +1,21 @@
+{
+  "schema": "codehelix.source_lock/v1",
+  "target": "opencode-1.x",
+  "source_tree_sha256": "9e89363481ede91e0517bf82d1b35a67a8bfd96ab7ef477f0ec79fb1fb813893",
+  "installer_kit_sha256": "fbfc5e431ae8960d8500001576cee847c2d1c6bdcd6bf9875cf8fd46071cf52f",
+  "sources": [
+    {
+      "repo": "https://github.com/yiikou/Lingxi-TaskPatternGuidance.git",
+      "commit": "21d9b7f279b80616e21c780ce6a26a2cd8f1db9e",
+      "role": "Lingxi Advisor 0.8.6 release bundle",
+      "archive_sha256": "f2ea26a15de0621816ac9c51361eddaa62fe20b4cc3bee52a141999396876fbf"
+    }
+  ],
+  "core_version": "0.8.6",
+  "release_tree_sha256": "61ec890963f2877042b945b61804a244495f8b2ac654f5337474bf06a1868355",
+  "excluded": [
+    "Harbor",
+    "SWE-bench Pro runner",
+    "Lingxi Profiles"
+  ]
+}

@@ -1,0 +1,7 @@
+# Runtime dependencies from the locked lingxi-advisor wheel, including its mcp extra.
+filelock<4,>=3.13
+httpx<1,>=0.27
+openai<3,>=1.66
+python-dotenv<2,>=1.0
+PyYAML<7,>=6
+mcp[cli]<2,>=1.27

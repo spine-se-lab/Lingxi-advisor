@@ -1,0 +1,111 @@
+{
+  "schema": "codehelix.plugin/v1",
+  "plugin": {
+    "id": "lingxi-advisor",
+    "name": "Lingxi Advisor",
+    "version": "0.3.13",
+    "description": {
+      "zh-CN": "为 Coding Agent 交付完整 Lingxi Advisor Runtime 与 Knowledge Preparation/Codify 能力。",
+      "en": "Deliver the full Lingxi Advisor runtime and Knowledge Preparation/Codify capabilities."
+    }
+  },
+  "status": "active",
+  "documentation": "README.md",
+  "targets": [
+    "targets/icode-chrys-0.28.json",
+    "targets/opencode-1.x.json",
+    "targets/pi-0.85.1.json",
+    "targets/codex-native.json",
+    "targets/claude-code-2.1.285.json",
+    "targets/deepseek-harness-0.2.0-rc.2.json"
+  ],
+  "content": {
+    "skills": "source/assets/skills",
+    "mcp": [
+      {
+        "name": "lingxi-advisor",
+        "runtime": {
+          "kind": "python",
+          "source": "source/upstream",
+          "command": "lingxi-advisor-codehelix-runtime",
+          "python": "3.12"
+        },
+        "workspace_env": "LINGXI_ADVISOR_DATA_ROOT",
+        "env_vars": [
+          "GITHUB_TOKEN",
+          "GITHUB_TOKEN_1",
+          "GITHUB_TOKEN_2",
+          "GITHUB_TOKEN_3",
+          "GITHUB_TOKEN_4",
+          "GITHUB_TOKEN_5",
+          "GITHUB_TOKEN_6",
+          "GITHUB_TOKEN_7",
+          "GITHUB_TOKEN_8",
+          "GITHUB_TOKEN_9",
+          "GITHUB_TOKEN_10",
+          "GITHUB_TOKEN_11",
+          "GITHUB_TOKEN_12",
+          "GITHUB_TOKEN_13",
+          "GITHUB_TOKEN_14",
+          "GITHUB_TOKEN_15",
+          "LINGXI_ADVISOR_JUDGE_BASE_URL",
+          "LINGXI_ADVISOR_JUDGE_API_KEY",
+          "LINGXI_ADVISOR_JUDGE_MODEL",
+          "LINGXI_ADVISOR_GENERATOR_BASE_URL",
+          "LINGXI_ADVISOR_GENERATOR_API_KEY",
+          "LINGXI_ADVISOR_GENERATOR_MODEL"
+        ],
+        "transport": "stdio",
+        "description": {
+          "en": "Search and apply safe same-repository Lingxi Advisor knowledge.",
+          "zh-CN": "检索并应用同仓库的安全 Lingxi Advisor 知识。"
+        },
+        "tools": [
+          {
+            "name": "lingxi.advisor.search",
+            "read_only": false
+          },
+          {
+            "name": "lingxi.advisor.apply",
+            "read_only": true
+          }
+        ],
+        "data_access": [
+          {
+            "mode": "read_write",
+            "root": "target_config",
+            "path": "lingxi/advisor/data",
+            "binding": {
+              "configuration": "workbench_workspace",
+              "path": "."
+            },
+            "description": {
+              "en": "Lingxi Advisor knowledge, retrieval cache, and generated output data.",
+              "zh-CN": "Lingxi Advisor 知识、检索缓存与生成输出数据。"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "native_configuration": {
+    "workbench_workspace": {
+      "type": "path",
+      "required": true,
+      "label": {
+        "en": "Lingxi Advisor data directory",
+        "zh-CN": "Lingxi Advisor 数据目录"
+      },
+      "description": {
+        "en": "Select an existing absolute directory for Lingxi Advisor knowledge, cache, and outputs.",
+        "zh-CN": "选择一个现有的绝对目录，用于 Lingxi Advisor 知识、缓存和输出。"
+      },
+      "placeholder": "/absolute/lingxi-advisor-data",
+      "path_options": {
+        "absolute": true,
+        "kind": "directory",
+        "must_exist": true
+      }
+    }
+  }
+}
